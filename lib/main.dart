@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_app_attandance/core/api/dio_consumer.dart';
+import 'package:student_app_attandance/cubits/cubit/user_cubit.dart';
 import 'package:student_app_attandance/views/inital_scan_view.dart';
 import 'package:student_app_attandance/views/login_view.dart';
 import 'package:student_app_attandance/views/register_view.dart';
@@ -7,7 +11,12 @@ import 'package:student_app_attandance/views/splash_view.dart';
 import 'package:student_app_attandance/views/succes_view.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // CacheHelper().init();
+  runApp(BlocProvider(
+    create: (context) => UserCubit(DioConsumer(dio: Dio())),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +24,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
       routes: {
         LoginView.id: (context) => const LoginView(),
@@ -27,7 +35,7 @@ class MyApp extends StatelessWidget {
       },
       initialRoute: LoginView.id,
       debugShowCheckedModeBanner: false,
-      home: SplachAnimated(),
+      home: const LoginView(),
     );
   }
 }

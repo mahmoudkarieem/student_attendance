@@ -1,111 +1,125 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:http/http.dart' as http;
-import 'package:student_app_attandance/views/succes_view.dart';
+
+import 'package:student_app_attandance/core/errors/exeptions.dart';
+import 'package:student_app_attandance/cubits/cubit/user_cubit.dart';
 
 class ScanQr extends StatefulWidget {
   const ScanQr({super.key});
-  static String id = "Scan qr";
+
+  static String id = "Scan QR";
 
   @override
   State<ScanQr> createState() => _ScanQrState();
 }
 
 class _ScanQrState extends State<ScanQr> {
-  /*
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? controller;
+  bool scanStarted = false;
 
-  // void _onQRViewCreated(QRViewController controller) {
-  //   this.controller = controller;
-  //   controller.scannedDataStream.listen((scanData) {
-  //     setState(() {
-  //       result = scanData.code!;
-  //     });
-  //   });
-  // }
-  
-  Future<void> checkQRCode(String qrCode) async {
-    final url = 'YOUR_API_ENDPOINT'; // Replace with your API endpoint
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    final body = jsonEncode({
-      'qrCode': qrCode,
-    });
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 
-    try {
-      final response =
-          await http.post(Uri.parse(url), headers: headers, body: body);
-      if (response.statusCode == 200) {
-        // QR code matches API response
-        setState(() {
-          result = 'Success!';
-        });
-      } else {
-        // QR code does not match API response
-        setState(() {
-          result = 'Failure!';
-        });
-      }
-    } catch (e) {
-      // Error occurred during API request
-      setState(() {
-        result = 'API Error!';
-      });
-      print('Exception: $e');
-    }
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<UserCubit, UserState>(
+      listener: (context, state) {
+        if (state is ScanSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Success"),
+            ),
+          );
+        } else if (state is ScanFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Failure: ${state.errMessage}"),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Scan QR Code",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(
+                top: 80, bottom: 140, right: 20, left: 20),
+            child: SizedBox(
+              height: 500,
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  _buildQrView(context),
+                  if (!scanStarted)
+                    Center(
+                      child:state is ScanLoading?const CircularProgressIndicator(): ElevatedButton(
+                        onPressed: () {
+                          context.read<UserCubit>().scanQR;
+                          setState(() {
+                            scanStarted = true;
+                          });
+                        },
+                        child: const Text('Start Scan'),
+                      ),
+                    ),
+                  // state is ScanLoading
+                  //     ? const Center(child: CircularProgressIndicator())
+                  //     : Positioned(
+                  //         top: -80,
+                  //         child: ElevatedButton.icon(
+                  //           onPressed: () {
+                  //             context.read<UserCubit>().scanQR;
+                  //           },
+                  //           icon: const Icon(Icons.done),
+                  //           label: const Text("Done"),
+                  //         ),
+                  //       )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildQrView(BuildContext context) {
+    return QRView(
+      key: qrKey,
+      onQRViewCreated: _onQRViewCreated,
+      overlay: QrScannerOverlayShape(
+        borderRadius: 10,
+        borderColor: Colors.red,
+        borderLength: 30,
+        borderWidth: 10,
+        cutOutSize: MediaQuery.of(context).size.width * 0.8,
+      ),
+    );
   }
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData.code!;
-      });
-      checkQRCode(scanData.code!); // Call the checkQRCode method
+    controller.scannedDataStream.listen((scanData) async {
+      try {
+        await context.read<UserCubit>().scanQr(scanData.code);
+      } on ServerException catch (e) {
+        e.errModel.errorMessage;
+      } catch (e) {
+        e.toString();
+      }
     });
-  }
-*/
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Scan QR Code in box",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Stack(
-        children: [
-          Image.asset(
-            'assets/frame_qr.png',
-          ),
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SuccesView.id);
-              },
-              icon: Icon(Icons.next_plan_sharp))
-          // QRView(
-          //   key: qrKey,
-          //   onQRViewCreated: _onQRViewCreated,
-          // ),
-          // Positioned.fill(
-          //   child: Align(
-          //     alignment: Alignment.bottomCenter,
-          //     child: Text(
-          //       result,
-          //       style: TextStyle(fontSize: 20),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
   }
 }

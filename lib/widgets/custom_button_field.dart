@@ -3,13 +3,18 @@ import 'package:flutter/material.dart';
 import '../component/constants.dart';
 
 class CustomButtomField extends StatelessWidget {
-  const CustomButtomField({
+   const CustomButtomField({
     super.key,
     required this.text,
+    this.color=kPrimaryColor
+    , this.colorText=  Colors.white,
+
   });
   final String text;
   // final Width width;
-
+  // void Function()? onTap;
+    final  Color? color;
+    final Color? colorText;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +22,7 @@ class CustomButtomField extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: kPrimaryColor,
+        color: color,
       ),
       child: Center(
         child: Text(

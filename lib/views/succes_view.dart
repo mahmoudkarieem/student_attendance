@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:student_app_attandance/component/constants.dart';
 
 class SuccesView extends StatelessWidget {
-  const SuccesView({super.key});
-  static String id = "Succes View";
+  const SuccesView({super.key, });
+  static String id = "Success View";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
