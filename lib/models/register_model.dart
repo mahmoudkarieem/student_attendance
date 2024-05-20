@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:student_app_attandance/core/api/end_points.dart';
-import 'package:student_app_attandance/models/login_model.dart';
 
 class SignUpModel {
   final String name;

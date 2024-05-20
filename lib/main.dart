@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_app_attandance/cashe/cashe_helper.dart';
 import 'package:student_app_attandance/core/api/dio_consumer.dart';
 import 'package:student_app_attandance/cubits/cubit/user_cubit.dart';
 import 'package:student_app_attandance/views/inital_scan_view.dart';
@@ -10,9 +11,10 @@ import 'package:student_app_attandance/views/scan_qr_view.dart';
 import 'package:student_app_attandance/views/splash_view.dart';
 import 'package:student_app_attandance/views/succes_view.dart';
 
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // CacheHelper().init();
+  CacheHelper().init();
   runApp(BlocProvider(
     create: (context) => UserCubit(DioConsumer(dio: Dio())),
     child: const MyApp(),

@@ -34,12 +34,32 @@ final class SignUpFailure extends UserState {
 }
 
 ///////////
-final class ScanSuccess extends UserState {}
+final class ScanSuccess extends UserState {
+
+
+
+
+
+}
 
 final class ScanFailure extends UserState {
-  final String errMessage;
+  final dynamic errMessage;
 
   ScanFailure({required this.errMessage});
+
 }
 
 final class ScanLoading extends UserState {}
+////////////////////////////////////
+
+
+
+class ResetPasswordLoading extends UserState {}
+
+class ResetPasswordSuccess extends UserState {}
+
+class ResetPasswordFailure extends UserState {
+  final String errMessage;
+
+  ResetPasswordFailure({required this.errMessage});
+}

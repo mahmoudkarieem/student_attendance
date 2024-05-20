@@ -3,11 +3,12 @@ class EndPoint {
   static String signIn = "Account/Login";
   static String signUp = "Account/Register";
   static String scanQr = "Student";
+  static String forgetPassword="Account/ForgetPassword";
 }
 
 class ApiKey {
   static String status = "status";
-  static String errorMessage = "title";
+  static String errorMessage = "message";
   static String email = "email";
   static String password = "password";
   static String token = "token";
@@ -17,7 +18,8 @@ class ApiKey {
   static String scannedQR = "ScannedQR";
   static String message = "message";
   static String statusScan = "statusCode";
+  static String emailReset = "email";
 
-  // static String messageScanQr = "message";
-  // static String statusScan = "statusCode";
+
+
 }
