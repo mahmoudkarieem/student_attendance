@@ -7,22 +7,19 @@ class CustomTextFileds extends StatelessWidget {
 
       this.obscureText = false,
       this.controller,
-      required this.labelText})
+      required this.labelText, this.validator})
       : super(key: key);
   // final String hintText;
   final String labelText;
   final bool obscureText;
   final TextEditingController? controller;
+  final String ?Function(String?) ?validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      validator: (data) {
-        if (data!.isEmpty) {
-          return 'field is required';
-        }
-      },
+      validator: validator,
       obscureText: obscureText!,
       decoration: InputDecoration(
         // hintText: hintText,

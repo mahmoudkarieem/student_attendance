@@ -21,7 +21,7 @@ class ForgetPasswordWidget extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ForgetPasswordView()
+              builder: (context) =>  PasswordResetRequestScreen()
             ),
           )
         },

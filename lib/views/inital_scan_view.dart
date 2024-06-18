@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:student_app_attandance/component/constants.dart';
 import 'package:student_app_attandance/views/scan_qr_view.dart';
 
 class InitalScan extends StatelessWidget {
@@ -32,11 +33,15 @@ class InitalScan extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            const Text(
-              'Please Put Your Phone QR Code To Scan It',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Please Put Your Phone QR Code To Scan It',
+                style: TextStyle(fontSize: 30, color: kPrimaryColor),
+                // style: TextStyle(
+                //   color: Colors.black,
+                //   fontSize: 20,
+                // ),
               ),
             ),
             const SizedBox(

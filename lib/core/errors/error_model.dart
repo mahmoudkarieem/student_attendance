@@ -5,7 +5,7 @@ class ErrorModel {
   final String errorMessage;
 
   ErrorModel({required this.status, required this.errorMessage});
-  factory ErrorModel.fromJson(Map<String, dynamic> jsonData) {
+  factory ErrorModel.fromJson(jsonData) {
     return ErrorModel(
       status: jsonData[ApiKey.status],
       errorMessage: jsonData[ApiKey.errorMessage],

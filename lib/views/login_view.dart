@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_app_attandance/cubits/cubit/user_cubit.dart';
 import 'package:student_app_attandance/widgets/forget_password.dart';
@@ -13,7 +9,6 @@ import '../component/constants.dart';
 import '../widgets/custom_button_field.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/my_logo.dart';
-import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   const LoginView({
@@ -35,13 +30,13 @@ class _LoginViewState extends State<LoginView> {
           Navigator.pushNamed(context, InitalScan.id);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("success"),
+              content: Text("Success"),
             ),
           );
         } else if (state is SignInFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errMessage),
+            const SnackBar(
+              content: Text("Failure"),
             ),
           );
         }
@@ -86,6 +81,15 @@ class _LoginViewState extends State<LoginView> {
                                 labelText: 'Email',
                                 controller:
                                     context.read<UserCubit>().signInEmail,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your email';
+                                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                    return 'Please enter a valid email';
+                                  }
+                                  return null;
+                                },
+
                               ),
                               const SizedBox(
                                 height: 50,
@@ -96,19 +100,29 @@ class _LoginViewState extends State<LoginView> {
                                     context.read<UserCubit>().signInPassword,
                                 //
                                 labelText: 'Password',
-                              ),const SizedBox(height: 20,),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your password';
+                                  } else if (value.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
                               const ForgetPasswordWidget(),
                               const SizedBox(
                                 height: 160,
                               ),
                               state is SignInLoading
-                                  ? CircularProgressIndicator()
+                                  ? const CircularProgressIndicator()
                                   : GestureDetector(
                                       onTap: () {
                                         context.read<UserCubit>().signIn();
-                                        
                                       },
-                                      child:  CustomButtomField(
+                                      child: const CustomButtomField(
                                         text: 'LOGIN',
                                       ),
                                     ),

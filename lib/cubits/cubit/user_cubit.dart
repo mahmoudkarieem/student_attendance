@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -58,12 +57,14 @@ class UserCubit extends Cubit<UserState> {
 
   SignInModel? user;
   SignUpModel? userModel;
-  ScanModel ? scanModel;
+  ScanModel? scanModel;
 
   ////////////////////////////
   TextEditingController emailReset = TextEditingController();
 
   // CameraController? _cameraController;
+  // TextEditingController newPassword = TextEditingController();
+  // TextEditingController confirmNewPassword = TextEditingController();
   signIn() async {
     try {
       emit(SignInLoading());
@@ -108,7 +109,7 @@ class UserCubit extends Cubit<UserState> {
 
       // Check if the response is a JSON string and decode it
       final responseData = response is String ? jsonDecode(response) : response;
-      emit(SignUpSuccess());
+      emit(SignUpSuccess(message: ApiKey.messageState));
 
       userModel = SignUpModel.fromJson(response);
       final decodedToken = JwtDecoder.decode(userModel!.token);
@@ -119,78 +120,77 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-
-  // scanQr(String? qrCode) async {
-  //   try {
-  //     emit(ScanLoading());
-  //     final token = await CacheHelper().getData(key: ApiKey.token);
-  //     debugPrint("Token $token");
-  //
-  //     final response = await api.post(
-  //       EndPoint.scanQr,
-  //       data: {
-  //         ApiKey.scannedQR: qrCode,
-  //       },
-  //     );
-  //      emit(ScanSuccess());
-  //
-  //   } on ServerException catch (e) {
-  //     emit(ScanFailure(errMessage: e.errModel.errorMessage));
-  //   }
-  //   catch (e) {
-  //     emit(ScanFailure(errMessage: e.toString()));
-  //   }
-  // }
-
-   scanQr(String? qrCode) async {
+  scanQr(String? qrCode) async {
     try {
       if (qrCode == null || qrCode.isEmpty) {
         emit(ScanFailure(errMessage: "QR Code is null or empty"));
         return;
       }
-
       debugPrint("Scanned QR Code: $qrCode");
-
       emit(ScanLoading());
-
       final token = await CacheHelper().getData(key: ApiKey.token);
       debugPrint("Token: $token");
-
       final response = await api.post(
         EndPoint.scanQr,
         data: {
-          ApiKey.scannedQR: qrCode.toString(),
+          ApiKey.scannedQR: qrCode,
           // ApiKey.message:messageScanQr.text
-
         },
-        queryParameters:token,
-
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       );
-
+      emit(
+        ScanSuccess(
+          message: "Success",
+        ),
+      );
       debugPrint("Response: ${response.data}");
-      emit(ScanSuccess());
-
     } on ServerException catch (e) {
       debugPrint("ServerException: ${e.errModel.errorMessage}");
+      emit(ScanFailure(errMessage: "An error occurred while scanning the QR code."));
       emit(ScanFailure(errMessage: e.errModel.errorMessage));
-    } catch (e) {
-      debugPrint("Exception: $e");
-      emit(ScanFailure(errMessage: e.toString()));
     }
+    // catch (e) {
+    //   debugPrint("Exception: $e");
+    //
+    //   emit(ScanFailure(
+    //       errMessage: "An error occurred while scanning the QR code."));
+    // }
   }
+  //////////////////////////////////////////
 
 
-
-  forgetPassword() {
-    try {
-      emit(ResetPasswordLoading());
-      final response = api.post(EndPoint.forgetPassword,
-          data: {ApiKey.emailReset: emailReset.text});
-      emit(ResetPasswordSuccess());
-    } on ServerException catch (e) {
-      emit(ResetPasswordFailure(errMessage: e.toString()));
-    }
-  }
+//   Future<void> sendPasswordResetRequest() async {
+//     try {
+//
+//       final response = api.post(EndPoint.forgetPassword,
+//         data: {
+//           'email': emailReset.text,
+//         },
+//       );
+//       // Assuming the API returns a message that the request was successful
+//       print(response);
+//       emit(ResetPasswordSuccess());
+//     } on ServerException catch (e) {
+//       emit(ResetPasswordFailure(errMessage: e.toString()));
+//       print(e.errModel.errorMessage);
+//     }
+//   }
+//   Future<void> updatePassword(String email, String token, String newPassword, String confirmPassword) async {
+//
+//     final response = await api.post(EndPoint.resetPassword, data: {
+// ApiKey.password:newPassword
+//   ,    ApiKey.password: confirmPassword
+//
+//     });
+//
+//     if (response.statusCode == 200) {
+//       // Navigate to the login screen or display a success message
+//       print('Password updated successfully');
+//     } else {
+//       // Handle the error
+//       print('Error updating password: ${response.statusCode}');
+//     }
+//   }
 }
-
-

@@ -20,9 +20,9 @@ final class SignInLoading extends UserState {}
 ///
 
 final class SignUpSuccess extends UserState {
-  // final String message;
+  final String message;
 
-  // SignUpSuccess({required this.message});
+  SignUpSuccess({required this.message});
 }
 
 final class SignUpLoading extends UserState {}
@@ -35,24 +35,19 @@ final class SignUpFailure extends UserState {
 
 ///////////
 final class ScanSuccess extends UserState {
+  final String message;
 
-
-
-
-
+  ScanSuccess({required this.message});
 }
 
 final class ScanFailure extends UserState {
   final dynamic errMessage;
 
   ScanFailure({required this.errMessage});
-
 }
 
 final class ScanLoading extends UserState {}
 ////////////////////////////////////
-
-
 
 class ResetPasswordLoading extends UserState {}
 
@@ -62,4 +57,14 @@ class ResetPasswordFailure extends UserState {
   final String errMessage;
 
   ResetPasswordFailure({required this.errMessage});
+}
+//////////////////
+class UpdatePasswordLoading extends UserState {}
+
+class UpdatePasswordSuccess extends UserState {}
+
+class UpdatePasswordFailure extends UserState {
+  final String errMessage;
+
+  UpdatePasswordFailure({required this.errMessage});
 }

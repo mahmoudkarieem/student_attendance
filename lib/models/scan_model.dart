@@ -8,6 +8,6 @@ class ScanModel {
   factory ScanModel.fromJson(Map<String, dynamic> jsonData) {
     return ScanModel(
         status: jsonData[ApiKey.status],
-        errorMessage: jsonData[ApiKey.message]);
+        errorMessage: jsonData[ApiKey.messageState]);
   }
 }

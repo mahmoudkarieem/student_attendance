@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_app_attandance/cashe/cashe_helper.dart';
 import 'package:student_app_attandance/core/api/dio_consumer.dart';
 import 'package:student_app_attandance/cubits/cubit/user_cubit.dart';
+import 'package:student_app_attandance/views/failure_view.dart';
 import 'package:student_app_attandance/views/inital_scan_view.dart';
 import 'package:student_app_attandance/views/login_view.dart';
 import 'package:student_app_attandance/views/register_view.dart';
 import 'package:student_app_attandance/views/scan_qr_view.dart';
 import 'package:student_app_attandance/views/splash_view.dart';
 import 'package:student_app_attandance/views/succes_view.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
         InitalScan.id: (context) => const InitalScan(),
         ScanQr.id: (context) => const ScanQr(),
         SuccesView.id: (context) => const SuccesView(),
-        SplachAnimated.id: (context) => const SplachAnimated()
+        SplachAnimated.id: (context) => const SplachAnimated(),
+        FailureView.id: (context) => const FailureView()
       },
       initialRoute: LoginView.id,
       debugShowCheckedModeBanner: false,
